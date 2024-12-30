@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from './ui/textarea';
+import { CopyButton } from './ui/copy-button';
+import { useHistory } from '@/contexts/HistoryContext';
 import {
   Select,
   SelectContent,
@@ -10,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
-import { Copy, FileJson, Trash2, Wand2 } from 'lucide-react';
+import { FileJson, Trash2, Wand2 } from 'lucide-react';
 
 type Operation = 'format' | 'escape' | 'unescape' | 'to-csv' | 'to-xml' | 'to-yaml';
 
@@ -20,6 +22,18 @@ export function JsonFormatter() {
   const [operation, setOperation] = useState<Operation>('format');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { addEntry, registerRestoreCallback, unregisterRestoreCallback } = useHistory();
+
+  useEffect(() => {
+    const handleRestore = (entry: any) => {
+      setInput(entry.operation.input.input);
+      setOutput(entry.operation.output.result);
+      setOperation(entry.operation.type as Operation);
+    };
+
+    registerRestoreCallback('json', handleRestore);
+    return () => unregisterRestoreCallback('json');
+  }, [registerRestoreCallback, unregisterRestoreCallback]);
 
   const handleOperation = async () => {
     if (!input.trim()) {
@@ -66,6 +80,10 @@ export function JsonFormatter() {
       }
 
       setOutput(data.result);
+      
+      // Add to history
+      addEntry('json', operation, { input }, { result: data.result });
+
       toast({
         title: 'Success',
         description: `Operation completed successfully`,
@@ -79,40 +97,6 @@ export function JsonFormatter() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleCopy = async () => {
-    if (!output) {
-      toast({
-        title: 'Error',
-        description: 'No output to copy',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(output);
-      toast({
-        title: 'Copied',
-        description: 'Output copied to clipboard',
-      });
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to copy to clipboard',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleClear = () => {
-    setInput('');
-    setOutput('');
-    toast({
-      title: 'Cleared',
-      description: 'Input and output cleared',
-    });
   };
 
   const handlePaste = async () => {
@@ -130,6 +114,15 @@ export function JsonFormatter() {
         variant: 'destructive',
       });
     }
+  };
+
+  const handleClear = () => {
+    setInput('');
+    setOutput('');
+    toast({
+      title: 'Cleared',
+      description: 'Input and output cleared',
+    });
   };
 
   const getOperationLabel = () => {
@@ -216,10 +209,6 @@ export function JsonFormatter() {
               <FileJson className="w-4 h-4" />
               <span>Paste</span>
             </Button>
-            <Button variant="outline" onClick={handleCopy} className="space-x-2">
-              <Copy className="w-4 h-4" />
-              <span>Copy</span>
-            </Button>
             <Button variant="outline" onClick={handleClear} className="space-x-2">
               <Trash2 className="w-4 h-4" />
               <span>Clear</span>
@@ -229,7 +218,10 @@ export function JsonFormatter() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">JSON Input:</label>
+            <div className="flex justify-between items-center">
+              <label className="text-sm font-medium">JSON Input:</label>
+              <CopyButton value={input} title="Copy Input" />
+            </div>
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -238,7 +230,10 @@ export function JsonFormatter() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Output:</label>
+            <div className="flex justify-between items-center">
+              <label className="text-sm font-medium">Output:</label>
+              <CopyButton value={output} title="Copy Output" />
+            </div>
             <Textarea
               value={output}
               readOnly

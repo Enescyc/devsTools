@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { Textarea } from './ui/textarea';
+import { CopyButton } from './ui/copy-button';
+import { useHistory } from '@/contexts/HistoryContext';
 import {
   Select,
   SelectContent,
@@ -12,7 +15,6 @@ import {
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { FileText, Wand2, Copy, Trash2 } from 'lucide-react';
-import { Textarea } from './ui/textarea';
 
 interface RegexMatch {
   match: string;
@@ -36,6 +38,21 @@ export function RegexTester() {
   const [commonPatterns, setCommonPatterns] = useState<CommonPattern[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { addEntry, registerRestoreCallback, unregisterRestoreCallback } = useHistory();
+
+  useEffect(() => {
+    const handleRestore = (entry: any) => {
+      setPattern(entry.operation.input.pattern);
+      setText(entry.operation.input.text);
+      setFlags(entry.operation.input.flags);
+      setMatches(entry.operation.output.matches);
+      setIsValid(entry.operation.output.isValid);
+      setError(entry.operation.output.error || '');
+    };
+
+    registerRestoreCallback('regex', handleRestore);
+    return () => unregisterRestoreCallback('regex');
+  }, [registerRestoreCallback, unregisterRestoreCallback]);
 
   useEffect(() => {
     fetchCommonPatterns();
@@ -77,15 +94,17 @@ export function RegexTester() {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to test regex');
-      }
-
       setIsValid(data.isValid);
       setMatches(data.matches);
       setError(data.error || '');
+      
+      // Add to history if valid
+      if (data.isValid) {
+        addEntry('regex', 'test', 
+          { pattern, text, flags }, 
+          { matches: data.matches, isValid: data.isValid, error: data.error }
+        );
 
-      if (data.isValid && data.matches.length > 0) {
         toast({
           title: 'Success',
           description: `Found ${data.matches.length} match${data.matches.length === 1 ? '' : 'es'}`,
@@ -151,8 +170,8 @@ export function RegexTester() {
                 ))}
               </SelectContent>
             </Select>
-            <Button
-              onClick={handleTest}
+            <Button 
+              onClick={handleTest} 
               disabled={isLoading}
               className="space-x-2"
             >
@@ -212,7 +231,10 @@ export function RegexTester() {
           </div>
 
           <div className="space-y-2">
-            <Label>Test Text:</Label>
+            <div className="flex justify-between items-center">
+              <Label>Test Text:</Label>
+              <CopyButton value={text} title="Copy Test Text" />
+            </div>
             <Textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -229,7 +251,13 @@ export function RegexTester() {
 
           {isValid && matches.length > 0 && (
             <div className="space-y-2">
-              <Label>Matches ({matches.length}):</Label>
+              <div className="flex justify-between items-center">
+                <Label>Matches ({matches.length}):</Label>
+                <CopyButton 
+                  value={matches.map(m => m.match).join('\n')} 
+                  title="Copy All Matches" 
+                />
+              </div>
               <div className="space-y-2">
                 {matches.map((match, index) => (
                   <div

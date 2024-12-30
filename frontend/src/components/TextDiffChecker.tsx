@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from './ui/textarea';
+import { CopyButton } from './ui/copy-button';
+import { useHistory } from '@/contexts/HistoryContext';
 import { Copy, FileText, Trash2, Wand2 } from 'lucide-react';
 
 interface DiffLine {
@@ -27,6 +29,19 @@ export function TextDiffChecker() {
   const [stats, setStats] = useState<DiffStats | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { addEntry, registerRestoreCallback, unregisterRestoreCallback } = useHistory();
+
+  useEffect(() => {
+    const handleRestore = (entry: any) => {
+      setOldText(entry.operation.input.oldText);
+      setNewText(entry.operation.input.newText);
+      setDiffLines(entry.operation.output.diffLines);
+      setStats(entry.operation.output.stats);
+    };
+
+    registerRestoreCallback('diff', handleRestore);
+    return () => unregisterRestoreCallback('diff');
+  }, [registerRestoreCallback, unregisterRestoreCallback]);
 
   const handleCompare = async () => {
     if (!oldText.trim() || !newText.trim()) {
@@ -60,6 +75,12 @@ export function TextDiffChecker() {
       setDiffLines(data.lines);
       setStats(data.stats);
 
+      // Add to history
+      addEntry('diff', 'compare', 
+        { oldText, newText }, 
+        { diffLines: data.lines, stats: data.stats }
+      );
+
       toast({
         title: 'Success',
         description: `Found ${data.stats.additions} additions and ${data.stats.deletions} deletions`,
@@ -86,45 +107,13 @@ export function TextDiffChecker() {
     });
   };
 
-  const handleCopy = async () => {
-    if (!diffLines.length) {
-      toast({
-        title: 'Error',
-        description: 'No diff result to copy',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    try {
-      const diffText = diffLines
-        .map((line) => {
-          const prefix = line.type === 'added' ? '+ ' : line.type === 'removed' ? '- ' : '  ';
-          return prefix + line.content;
-        })
-        .join('\n');
-
-      await navigator.clipboard.writeText(diffText);
-      toast({
-        title: 'Copied',
-        description: 'Diff result copied to clipboard',
-      });
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to copy to clipboard',
-        variant: 'destructive',
-      });
-    }
-  };
-
   return (
     <Card className="p-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Button
-              onClick={handleCompare}
+            <Button 
+              onClick={handleCompare} 
               disabled={isLoading}
               className="space-x-2"
             >
@@ -133,10 +122,6 @@ export function TextDiffChecker() {
             </Button>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="outline" onClick={handleCopy} className="space-x-2">
-              <Copy className="w-4 h-4" />
-              <span>Copy</span>
-            </Button>
             <Button variant="outline" onClick={handleClear} className="space-x-2">
               <Trash2 className="w-4 h-4" />
               <span>Clear</span>
@@ -146,7 +131,10 @@ export function TextDiffChecker() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Original Text:</label>
+            <div className="flex justify-between items-center">
+              <label className="text-sm font-medium">Original Text:</label>
+              <CopyButton value={oldText} title="Copy Original" />
+            </div>
             <Textarea
               value={oldText}
               onChange={(e) => setOldText(e.target.value)}
@@ -155,7 +143,10 @@ export function TextDiffChecker() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Modified Text:</label>
+            <div className="flex justify-between items-center">
+              <label className="text-sm font-medium">Modified Text:</label>
+              <CopyButton value={newText} title="Copy Modified" />
+            </div>
             <Textarea
               value={newText}
               onChange={(e) => setNewText(e.target.value)}
@@ -164,33 +155,19 @@ export function TextDiffChecker() {
             />
           </div>
         </div>
-        <div className="mt-4">
-          <label className="text-sm font-medium">Diff Output:</label>
-          <Textarea
-            value={diffLines.length > 0 ? diffLines.map((line) => line.content).join('\n') : ''}
-            readOnly
-            className="font-mono h-[200px] resize-none bg-muted mt-2"
-            placeholder="Diff output will appear here..."
-          />
-        </div>
-
-        {stats && (
-          <div className="flex space-x-4 text-sm">
-            <div className="text-green-600">
-              +{stats.additions} additions
-            </div>
-            <div className="text-red-600">
-              -{stats.deletions} deletions
-            </div>
-            <div className="text-gray-600">
-              {stats.unchanged} unchanged
-            </div>
-          </div>
-        )}
 
         {diffLines.length > 0 && (
           <div className="space-y-2">
-            <label className="text-sm font-medium">Diff Result:</label>
+            <div className="flex justify-between items-center">
+              <label className="text-sm font-medium">Diff Result:</label>
+              <CopyButton 
+                value={diffLines.map(line => {
+                  const prefix = line.type === 'added' ? '+ ' : line.type === 'removed' ? '- ' : '  ';
+                  return prefix + line.content;
+                }).join('\n')} 
+                title="Copy Diff" 
+              />
+            </div>
             <div className="p-4 font-mono text-sm bg-gray-50 border rounded-md dark:bg-gray-900">
               {diffLines.map((line, index) => (
                 <div
@@ -219,6 +196,20 @@ export function TextDiffChecker() {
                   </pre>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {stats && (
+          <div className="flex space-x-4 text-sm">
+            <div className="text-green-600">
+              +{stats.additions} additions
+            </div>
+            <div className="text-red-600">
+              -{stats.deletions} deletions
+            </div>
+            <div className="text-gray-600">
+              {stats.unchanged} unchanged
             </div>
           </div>
         )}
