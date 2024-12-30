@@ -1,0 +1,227 @@
+openapi: 3.0.0
+info:
+  title: DevToolbox API
+  description: API documentation for DevToolbox - A comprehensive developer toolset
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /api/uuid/generate:
+    post:
+      summary: Generate UUID
+      description: Generate a single UUID with specified version
+      tags:
+        - UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                version:
+                  type: string
+                  enum: [v1, v4, v5, nil]
+                  description: UUID version to generate
+                namespace:
+                  type: string
+                  description: Required for v5 UUIDs
+                name:
+                  type: string
+                  description: Required for v5 UUIDs
+                startTime:
+                  type: string
+                  format: date-time
+                  description: Optional for v1 UUIDs
+              required:
+                - version
+      responses:
+        '200':
+          description: Successfully generated UUID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    description: The generated UUID
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/uuid/bulk:
+    post:
+      summary: Generate Multiple UUIDs
+      description: Generate multiple UUIDs at once
+      tags:
+        - UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                version:
+                  type: string
+                  enum: [v1, v4, v5, nil]
+                count:
+                  type: integer
+                  minimum: 1
+                  description: Number of UUIDs to generate
+                namespace:
+                  type: string
+                  description: Required for v5 UUIDs
+                name:
+                  type: string
+                  description: Required for v5 UUIDs
+              required:
+                - version
+                - count
+      responses:
+        '200':
+          description: Successfully generated UUIDs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: string
+                    description: Array of generated UUIDs
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/uuid/sequential:
+    post:
+      summary: Generate Sequential UUIDs
+      description: Generate multiple v1 UUIDs with sequential timestamps
+      tags:
+        - UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                count:
+                  type: integer
+                  minimum: 1
+                  description: Number of UUIDs to generate
+                startTime:
+                  type: string
+                  format: date-time
+                  description: Optional starting timestamp
+              required:
+                - count
+      responses:
+        '200':
+          description: Successfully generated sequential UUIDs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: string
+                    description: Array of sequential v1 UUIDs
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/uuid/info:
+    post:
+      summary: Get UUID Information
+      description: Validate and get information about a UUID
+      tags:
+        - UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                uuid:
+                  type: string
+                  description: The UUID to validate
+              required:
+                - uuid
+      responses:
+        '200':
+          description: Successfully validated UUID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isValid:
+                    type: boolean
+                    description: Whether the UUID is valid
+                  version:
+                    type: integer
+                    nullable: true
+                    description: UUID version number
+                  variant:
+                    type: string
+                    nullable: true
+                    description: UUID variant type
+                  timestamp:
+                    type: string
+                    nullable: true
+                    description: Timestamp for v1 UUIDs
+                  isNil:
+                    type: boolean
+                    description: Whether this is a nil UUID
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 400
+              message:
+                type: string
+                description: Error message
+
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 500
+              message:
+                type: string
+                example: "Internal server error"
+
+  examples:
+    UUIDv4:
+      value: "550e8400-e29b-41d4-a716-446655440000"
+    UUIDv5:
+      value: "6ba7b810-9dad-11d1-80b4-00c04fd430c8" 
