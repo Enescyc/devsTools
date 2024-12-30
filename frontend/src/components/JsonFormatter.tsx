@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { Textarea } from './ui/textarea';
 import {
   Select,
   SelectContent,
@@ -229,20 +230,20 @@ export function JsonFormatter() {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="text-sm font-medium">JSON Input:</label>
-            <textarea
+            <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="w-full h-[400px] p-2 font-mono text-sm border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800"
+              className="font-mono h-[400px] resize-none"
               placeholder={`Enter your JSON here...\nExample:\n{\n  "name": "John",\n  "age": 30,\n  "city": "New York"\n}`}
             />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Output:</label>
-            <textarea
+            <Textarea
               value={output}
               readOnly
-              className="w-full h-[400px] p-2 font-mono text-sm bg-gray-50 border rounded-md resize-none focus:outline-none dark:bg-gray-900"
-              placeholder={`Processed output will appear here...`}
+              className="font-mono h-[400px] resize-none bg-muted"
+              placeholder="Processed output will appear here..."
             />
           </div>
         </div>

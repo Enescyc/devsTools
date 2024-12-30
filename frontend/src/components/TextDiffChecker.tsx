@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Label } from './ui/label';
-import { GitCompareIcon, Copy, Trash2 } from 'lucide-react';
+import { Textarea } from './ui/textarea';
+import { Copy, FileText, Trash2, Wand2 } from 'lucide-react';
 
 interface DiffLine {
   type: 'added' | 'removed' | 'unchanged';
@@ -128,7 +128,7 @@ export function TextDiffChecker() {
               disabled={isLoading}
               className="space-x-2"
             >
-              <GitCompareIcon className="w-4 h-4" />
+              <Wand2 className="w-4 h-4" />
               <span>{isLoading ? 'Comparing...' : 'Compare'}</span>
             </Button>
           </div>
@@ -146,23 +146,32 @@ export function TextDiffChecker() {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label>Original Text:</Label>
-            <textarea
+            <label className="text-sm font-medium">Original Text:</label>
+            <Textarea
               value={oldText}
               onChange={(e) => setOldText(e.target.value)}
-              className="w-full h-[200px] p-2 font-mono text-sm border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800"
-              placeholder="Enter original text..."
+              className="font-mono h-[300px] resize-none"
+              placeholder="Enter the original text here..."
             />
           </div>
           <div className="space-y-2">
-            <Label>Modified Text:</Label>
-            <textarea
+            <label className="text-sm font-medium">Modified Text:</label>
+            <Textarea
               value={newText}
               onChange={(e) => setNewText(e.target.value)}
-              className="w-full h-[200px] p-2 font-mono text-sm border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800"
-              placeholder="Enter modified text..."
+              className="font-mono h-[300px] resize-none"
+              placeholder="Enter the modified text here..."
             />
           </div>
+        </div>
+        <div className="mt-4">
+          <label className="text-sm font-medium">Diff Output:</label>
+          <Textarea
+            value={diffLines.length > 0 ? diffLines.map((line) => line.content).join('\n') : ''}
+            readOnly
+            className="font-mono h-[200px] resize-none bg-muted mt-2"
+            placeholder="Diff output will appear here..."
+          />
         </div>
 
         {stats && (
@@ -181,7 +190,7 @@ export function TextDiffChecker() {
 
         {diffLines.length > 0 && (
           <div className="space-y-2">
-            <Label>Diff Result:</Label>
+            <label className="text-sm font-medium">Diff Result:</label>
             <div className="p-4 font-mono text-sm bg-gray-50 border rounded-md dark:bg-gray-900">
               {diffLines.map((line, index) => (
                 <div

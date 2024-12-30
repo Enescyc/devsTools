@@ -12,6 +12,7 @@ import {
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
 import { FileText, Wand2, Copy, Trash2 } from 'lucide-react';
+import { Textarea } from './ui/textarea';
 
 interface RegexMatch {
   match: string;
@@ -212,11 +213,11 @@ export function RegexTester() {
 
           <div className="space-y-2">
             <Label>Test Text:</Label>
-            <textarea
+            <Textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              className="w-full h-[200px] p-2 font-mono text-sm border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800"
-              placeholder="Enter text to test against..."
+              className="font-mono h-[200px] resize-none mt-2"
+              placeholder="Enter the text to test against the regex pattern..."
             />
           </div>
 
