@@ -19,7 +19,7 @@ interface HistoryDrawerProps {
 }
 
 export function HistoryDrawer({ toolType }: HistoryDrawerProps) {
-  const { entries, toggleFavorite, removeEntry, clearHistory, restoreEntry } = useHistory();
+  const { entries, toggleFavorite, removeEntry, restoreEntry } = useHistory();
   const [filter, setFilter] = useState<"all" | "favorites">("all");
   const [open, setOpen] = useState(false);
 

@@ -6,8 +6,9 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --omit=dev
+# Clean install dependencies
+RUN npm cache clean --force
+RUN npm install --force
 
 # Copy source code
 COPY . .
@@ -15,11 +16,11 @@ COPY . .
 # Create production env file
 COPY .env.production ./.env
 
-# Build the application
+# Build without rebuilding esbuild
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+FROM nginx:alpine as production
 
 # Copy built assets from build stage
 COPY --from=build /app/dist /usr/share/nginx/html

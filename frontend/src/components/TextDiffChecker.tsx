@@ -5,7 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Textarea } from './ui/textarea';
 import { CopyButton } from './ui/copy-button';
 import { useHistory } from '@/contexts/HistoryContext';
-import { Copy, FileText, Trash2, Wand2 } from 'lucide-react';
+import { Trash2, Wand2 } from 'lucide-react';
 
 interface DiffLine {
   type: 'added' | 'removed' | 'unchanged';

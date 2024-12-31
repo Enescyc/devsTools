@@ -11,10 +11,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select';
+} from './ui/select';   
 import { Checkbox } from './ui/checkbox';
 import { Label } from './ui/label';
-import { FileText, Wand2, Copy, Trash2 } from 'lucide-react';
+import { FileText, Wand2, Trash2 } from 'lucide-react';
 
 interface RegexMatch {
   match: string;
