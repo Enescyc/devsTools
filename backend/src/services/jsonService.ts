@@ -11,8 +11,7 @@ export class JsonService {
         .replace(/\n/g, '\\n')   // new line
         .replace(/\r/g, '\\r')   // carriage return
         .replace(/\t/g, '\\t')   // tab
-        .replace(/\f/g, '\\f')   // form feed
-        .replace(/\b/g, '\\b');  // backspace
+        .replace(/\f/g, '\\f');  // form feed
     } catch (error) {
       throw new Error('Invalid JSON input');
     }
@@ -20,19 +19,11 @@ export class JsonService {
 
   unescapeJson(input: string): string {
     try {
-      // First, verify if the input is a valid escaped JSON string
-      const unescaped = input
-        .replace(/\\\\/g, '\\')  // backslash
-        .replace(/\\"/g, '"')    // double quotes
-        .replace(/\\n/g, '\n')   // new line
-        .replace(/\\r/g, '\r')   // carriage return
-        .replace(/\\t/g, '\t')   // tab
-        .replace(/\\f/g, '\f')   // form feed
-        .replace(/\\b/g, '\b');  // backspace
-
-      // Validate the unescaped string is valid JSON
-      JSON.parse(unescaped);
-      return unescaped;
+      // First, verify if the input is a valid escaped JSON string by parsing it
+      const parsed = JSON.parse(input.replace(/\\\\/g, '\\').replace(/\\"/g, '"'));
+      
+      // Return the original input if parsing succeeds
+      return JSON.stringify(parsed);
     } catch (error) {
       throw new Error('Invalid escaped JSON input');
     }
