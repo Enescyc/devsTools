@@ -33,10 +33,11 @@ A modern, fast, and feature-rich developer toolkit that consolidates essential d
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
+- Docker and Docker Compose (for containerized deployment)
+- Node.js v18+ (for local development)
+- npm or yarn (for local development)
 
-### Installation
+### Production Deployment
 
 1. Clone the repository
 ```bash
@@ -44,27 +45,58 @@ git clone https://github.com/yourusername/devtools.git
 cd devtools
 ```
 
-2. Install dependencies
+2. Set up environment files
 ```bash
-# Install backend dependencies
+# Frontend environment
+cp frontend/.env.example frontend/.env.production
+# Edit frontend/.env.production with your production values
+
+# Backend environment
+cp backend/.env.example backend/.env.production
+# Edit backend/.env.production with your production values
+```
+
+3. Build and run with Docker Compose
+```bash
+docker-compose up --build
+```
+
+The application will be available at `http://localhost`
+
+### Development Setup
+
+1. Start with Docker (recommended)
+```bash
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+2. Or run locally:
+```bash
+# Install and start backend
 cd backend
 npm install
+npm run dev
 
-# Install frontend dependencies
+# Install and start frontend
 cd ../frontend
 npm install
-```
-
-3. Start the development servers
-```bash
-# Start backend server (from backend directory)
-npm run dev
-
-# Start frontend server (from frontend directory)
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`
+The development server will be available at `http://localhost:5173`
+
+### Environment Variables
+
+#### Frontend
+- `VITE_API_URL`: Backend API URL
+- `VITE_NODE_ENV`: Environment (development/production)
+
+#### Backend
+- `PORT`: Server port (default: 3000)
+- `NODE_ENV`: Environment (development/production)
+- `CORS_ORIGIN`: Allowed origin for CORS
+- `RATE_LIMIT_WINDOW_MS`: Rate limiting window
+- `RATE_LIMIT_MAX_REQUESTS`: Maximum requests per window
 
 ## 🔄 Upcoming Features
 

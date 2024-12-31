@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Docker configuration for production and development environments
+- Nginx configuration for production frontend
+- Environment configuration management
+- Production-ready deployment setup
+- Development environment with hot-reloading
 - History feature with local storage support
 - Favorite entries functionality
 - Copy to clipboard buttons across all tools
@@ -21,6 +26,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved error handling and user feedback
 - Updated styling system with TailwindCSS
 - Refactored state management using React Context
+- Optimized build process with multi-stage Docker builds
+- Updated TypeScript configuration for better type safety
+
+### Fixed
+- Testing environment configuration
+- Development hot-reload setup
+- Environment variable handling
+- Build process optimization
 
 ## [0.2.0] - 2024-01-01
 
