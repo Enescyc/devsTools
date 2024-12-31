@@ -16,6 +16,12 @@ A modern, fast, and feature-rich developer toolkit that consolidates essential d
 - ↔️ Text Diff Checker with Line-by-Line Comparison
 - 🔠 String Escape/Unescape (HTML, JavaScript, URL, Base64)
 
+### Utility Tools
+- 🔐 Hash Generator (MD5, SHA-1, SHA-256, SHA-512)
+- 🎲 UUID Generator (v1, v4, v5, NIL) with Validation
+- 🎨 Color Code Converter (HEX, RGB, HSL)
+- ⏰ Timestamp Converter (integrated with UUID v1)
+
 ### Common Features Across All Tools
 - 📋 Copy to Clipboard functionality
 - 📝 History tracking with restore capability
@@ -66,9 +72,6 @@ The application will be available at `http://localhost:5173`
 - [ ] Keyboard shortcuts for common operations
 - [ ] Export functionality (save results to file)
 - [ ] Additional conversion tools (CSV to JSON, XML to JSON)
-- [ ] Hash generators and UUID generator
-- [ ] Timestamp converter
-- [ ] Color code converter
 
 ## 🛠️ Built With
 
@@ -98,13 +101,7 @@ The application will be available at `http://localhost:5173`
 
 ## 📝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
 
 ## 📜 License
 
