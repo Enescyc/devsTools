@@ -21,7 +21,10 @@ function App() {
         <div className="min-h-screen bg-background text-foreground">
           <div className="container mx-auto py-8">
             <div className="flex justify-between items-center mb-8">
-              <h1 className="text-3xl font-bold">DevTools</h1>
+              <div className="flex items-center space-x-3">
+                <img src="/logo.svg" alt="DevToolbox Logo" className="w-8 h-8" />
+                <h1 className="text-3xl font-bold">DevToolbox</h1>
+              </div>
               <div className="flex items-center space-x-2">
                 <HistoryDrawer />
                 <ThemeToggle />

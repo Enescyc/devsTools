@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Toolbox body -->
+    <rect x="56" y="156" width="400" height="300" rx="20" fill="#4F46E5"/>
+    <rect x="96" y="156" width="320" height="40" fill="#6366F1"/>
+    
+    <!-- Handle -->
+    <path d="M176 156C176 111.817 211.817 76 256 76C300.183 76 336 111.817 336 156" stroke="#818CF8" stroke-width="30"/>
+    
+    <!-- Code symbols -->
+    <path d="M166 266L116 316L166 366" stroke="white" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M346 266L396 316L346 366" stroke="white" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M286 246L226 386" stroke="white" stroke-width="30" stroke-linecap="round"/>
+</svg> 
