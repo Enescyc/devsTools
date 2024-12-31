@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
@@ -40,7 +40,7 @@ const UuidGenerator: React.FC = () => {
   const [namespace, setNamespace] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [count, setCount] = useState<number>(1);
-  const [startTime, setStartTime] = useState<string>('');
+  const [startTime] = useState<string>('');
   const [uuidToValidate, setUuidToValidate] = useState<string>('');
   const [validationResult, setValidationResult] = useState<ValidationResponse | null>(null);
   const [isValidating, setIsValidating] = useState(false);

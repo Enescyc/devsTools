@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "src/**/*.test.*",
+    "src/**/__tests__/*",
+    "src/test/**/*",
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "types": ["node", "react", "react-dom"]
+  }
+} 
