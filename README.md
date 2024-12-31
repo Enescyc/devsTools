@@ -8,25 +8,21 @@ A modern, fast, and feature-rich developer toolkit that consolidates essential d
 - 🔍 JSON Formatter & Validator
 - 📝 JSON Minifier
 - 🔄 JSON to CSV/XML/YAML Converter
-- 🎯 JSON Path Finder
-- 🔒 JSON Escape/Unescape
+- 🎯 JSON Escape/Unescape
 
 ### Text Tools
-- ⚡ Text Case Converter
-- 🔍 Regex Tester with Real-time Matching
-- ↔️ Text Diff Checker
-- 🔠 String Escape/Unescape
+- ⚡ Text Case Converter (camelCase, snake_case, PascalCase, kebab-case)
+- 🔍 Regex Tester with Real-time Matching & Group Support
+- ↔️ Text Diff Checker with Line-by-Line Comparison
+- 🔠 String Escape/Unescape (HTML, JavaScript, URL, Base64)
 
-### Encoding/Decoding Tools
-- 📊 Base64 Encoder/Decoder
-- 🌐 URL Encoder/Decoder
-- 📝 HTML Entity Encoder/Decoder
-
-### Developer Utilities
-- 🎨 Color Code Converter (HEX/RGB/HSL)
-- ⏰ Timestamp Converter
-- 🔑 Hash Generator (MD5, SHA-1, SHA-256)
-- 🆔 UUID Generator
+### Common Features Across All Tools
+- 📋 Copy to Clipboard functionality
+- 📝 History tracking with restore capability
+- 🌓 Dark/Light theme support
+- ⚡ Real-time processing
+- 💾 Local storage for history entries
+- ⭐ Favorite entries support
 
 ## 🚀 Getting Started
 
@@ -69,24 +65,36 @@ The application will be available at `http://localhost:5173`
 - [ ] Performance optimization for large JSON/text inputs
 - [ ] Keyboard shortcuts for common operations
 - [ ] Export functionality (save results to file)
-- [ ] "Copy to Clipboard" for all tools
-- [ ] Dark/Light theme support
-- [ ] History feature to track recent conversions/operations
+- [ ] Additional conversion tools (CSV to JSON, XML to JSON)
+- [ ] Hash generators and UUID generator
+- [ ] Timestamp converter
+- [ ] Color code converter
 
 ## 🛠️ Built With
 
-- **Frontend**
-  - React
-  - TypeScript
-  - TailwindCSS
-  - ShadcN UI
-  - Vite
+### Frontend
+- **Framework:** React with TypeScript
+- **Styling:** TailwindCSS
+- **UI Components:** ShadcN UI
+- **State Management:** React Context API
+- **Build Tool:** Vite
+- **Features:**
+  - Real-time processing
+  - History management
+  - Theme switching
+  - Copy to clipboard
+  - Error handling
 
-- **Backend**
-  - Node.js
-  - Express
-  - TypeScript
-  - Jest
+### Backend
+- **Framework:** Node.js with Express
+- **Language:** TypeScript
+- **Architecture:** RESTful API
+- **Testing:** Jest
+- **Features:**
+  - SOLID principles
+  - Modular design
+  - Error handling
+  - Input validation
 
 ## 📝 Contributing
 
