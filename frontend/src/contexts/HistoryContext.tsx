@@ -3,6 +3,59 @@ import { v4 as uuidv4 } from 'uuid';
 
 export type ToolType = 'json' | 'regex' | 'diff' | 'text' | 'string';
 
+const MAX_ENTRIES_PER_TOOL = 20;
+const STORAGE_KEY = 'devtools-history';
+const MAX_INPUT_LENGTH = 10000; // Limit input length to 10KB Limit output length to 10KB
+
+// Helper function to truncate data
+const truncateData = (data: any): any => {
+  try {
+    if (typeof data === 'string') {
+      return data.length > MAX_INPUT_LENGTH ? data.slice(0, MAX_INPUT_LENGTH) + '...(truncated)' : data;
+    }
+    if (typeof data === 'object' && data !== null) {
+      const stringified = JSON.stringify(data);
+      if (stringified.length > MAX_INPUT_LENGTH) {
+        // For objects, we need to ensure we maintain valid JSON structure
+        if (Array.isArray(data)) {
+          // Handle arrays
+          const truncatedArray = [];
+          let currentSize = 2; // Account for [ and ]
+          for (const item of data) {
+            const itemString = JSON.stringify(item);
+            if (currentSize + itemString.length + 1 > MAX_INPUT_LENGTH - 20) {
+              truncatedArray.push("...(truncated)");
+              break;
+            }
+            truncatedArray.push(item);
+            currentSize += itemString.length + 1; // +1 for comma
+          }
+          return truncatedArray;
+        } else {
+          // Handle objects
+          const truncatedObj: Record<string, any> = {};
+          let currentSize = 2; // Account for { and }
+          for (const [key, value] of Object.entries(data)) {
+            const entryString = JSON.stringify({ [key]: value });
+            if (currentSize + entryString.length + 1 > MAX_INPUT_LENGTH - 20) {
+              truncatedObj['...(truncated)'] = '...';
+              break;
+            }
+            truncatedObj[key] = value;
+            currentSize += entryString.length + 1; // +1 for comma
+          }
+          return truncatedObj;
+        }
+      }
+      return data;
+    }
+    return data;
+  } catch (error) {
+    console.error('Error in truncateData:', error);
+    return { error: 'Data truncation failed' };
+  }
+};
+
 export interface HistoryEntry {
   id: string;
   toolType: ToolType;
@@ -29,18 +82,25 @@ interface HistoryContextType {
 
 const HistoryContext = createContext<HistoryContextType | undefined>(undefined);
 
-const MAX_ENTRIES_PER_TOOL = 20;
-const STORAGE_KEY = 'devtools-history';
-
 export function HistoryProvider({ children }: { children: React.ReactNode }) {
   const [entries, setEntries] = useState<HistoryEntry[]>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      const parsed = JSON.parse(stored);
-      return parsed.map((entry: any) => ({
-        ...entry,
-        timestamp: new Date(entry.timestamp)
-      }));
+      try {
+        const parsed = JSON.parse(stored);
+        return parsed.map((entry: any) => ({
+          ...entry,
+          timestamp: new Date(entry.timestamp),
+          operation: {
+            ...entry.operation,
+            input: truncateData(entry.operation.input),
+            output: truncateData(entry.operation.output)
+          }
+        }));
+      } catch (error) {
+        console.error('Error parsing history:', error);
+        return [];
+      }
     }
     return [];
   });
@@ -48,7 +108,19 @@ export function HistoryProvider({ children }: { children: React.ReactNode }) {
   const [restoreCallbacks] = useState<Map<ToolType, (entry: HistoryEntry) => void>>(new Map());
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    } catch (error) {
+      console.error('Error saving history:', error);
+      // If storage fails, remove oldest non-favorite entries
+      setEntries(prevEntries => {
+        const favorites = prevEntries.filter(e => e.favorite);
+        const nonFavorites = prevEntries.filter(e => !e.favorite)
+          .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+          .slice(0, MAX_ENTRIES_PER_TOOL);
+        return [...favorites, ...nonFavorites];
+      });
+    }
   }, [entries]);
 
   const addEntry = (
@@ -67,8 +139,8 @@ export function HistoryProvider({ children }: { children: React.ReactNode }) {
         timestamp: new Date(),
         operation: {
           type: operationType,
-          input,
-          output
+          input: truncateData(input),
+          output: truncateData(output)
         },
         favorite: false
       };

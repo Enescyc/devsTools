@@ -20,9 +20,17 @@ import stringRoutes from './routes/stringRoutes';
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
+// Configure request size limits
+const requestSizeLimit = '6mb';
+
 // Middleware
 app.use(cors());
-app.use(json());
+// Configure body-parser JSON middleware with size limit
+app.use(json({ 
+  limit: requestSizeLimit
+}));
+// Also configure express built-in JSON middleware with the same limit
+app.use(express.json({ limit: requestSizeLimit }));
 
 // Initialize services and controllers
 const textFormatter = new TextFormatter();
