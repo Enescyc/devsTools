@@ -7,13 +7,13 @@ A modern, fast, and feature-rich developer toolkit that consolidates essential d
 ### JSON Tools
 - 🔍 JSON Formatter & Validator (Completed)
 - 📝 JSON Minifier (Completed)
-- 🔄 JSON to CSV/XML/YAML Converter (In Progress)
+- 🔄 JSON to CSV/XML/YAML Converter (Completed)
 - 🎯 JSON Escape/Unescape (Completed)
 
 ### Text Tools
 - ⚡ Text Case Converter (camelCase, snake_case, PascalCase, kebab-case) (Completed)
-- 🔍 Regex Tester with Real-time Matching & Group Support (In Progress)
-- ↔️ Text Diff Checker with Line-by-Line Comparison (Planned)
+- 🔍 Regex Tester with Real-time Matching & Group Support (Completed)
+- ↔️ Text Diff Checker with Line-by-Line Comparison (Completed)
 - 🔠 String Escape/Unescape (HTML, JavaScript, URL, Base64) (Completed)
 
 ### Utility Tools
