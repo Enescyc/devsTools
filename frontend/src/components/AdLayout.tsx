@@ -1,11 +1,11 @@
-import { ReactNode, useEffect, useState, memo } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Ads } from './Ads';
 
 interface AdLayoutProps {
   children: ReactNode;
 }
 
-const FooterAd = memo(() => {
+export function AdLayout({ children }: AdLayoutProps) {
   const [isAdBlockEnabled, setIsAdBlockEnabled] = useState(false);
   const [adsenseLoaded, setAdsenseLoaded] = useState(false);
 
@@ -39,17 +39,17 @@ const FooterAd = memo(() => {
   }, []);
 
   return (
-    <footer className="border-t">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-[728px] mx-auto">
-          {isAdBlockEnabled ? (
-            <div className="text-center p-4 bg-muted rounded-lg">
-              <p className="text-sm text-muted-foreground">
-                Please disable your ad blocker to support our free tools.
-              </p>
-            </div>
-          ) : (
-            <>
+    <div className="flex flex-col min-h-screen">
+      {/* Main Content */}
+      <main className="flex-1">
+        {children}
+      </main>
+
+      {/* Footer Ad */}
+      {!isAdBlockEnabled && (
+        <footer className="mt-8 border-t">
+          <div className="container mx-auto px-4 py-8">
+            <div className="max-w-[728px] mx-auto">
               <Ads
                 slot={import.meta.env.VITE_ADSENSE_SLOT_FOOTER}
                 format="horizontal"
@@ -68,26 +68,25 @@ const FooterAd = memo(() => {
                   </p>
                 </div>
               )}
-            </>
-          )}
-        </div>
-      </div>
-    </footer>
-  );
-});
+            </div>
+          </div>
+        </footer>
+      )}
 
-FooterAd.displayName = 'FooterAd';
-
-export function AdLayout({ children }: AdLayoutProps) {
-  return (
-    <div className="flex flex-col min-h-screen">
-      {/* Main Content */}
-      <main className="flex-1">
-        {children}
-      </main>
-
-      {/* Footer Ad Component */}
-      <FooterAd />
+      {/* Ad Blocker Message */}
+      {isAdBlockEnabled && (
+        <footer className="mt-8 border-t">
+          <div className="container mx-auto px-4 py-8">
+            <div className="max-w-[728px] mx-auto">
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  Please disable your ad blocker to support our free tools.
+                </p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      )}
     </div>
   );
 } 
