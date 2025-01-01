@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { env } from '@/config/env';
 
 interface SEOProps {
   title?: string;
@@ -15,29 +16,30 @@ export function SEO({
   path = '',
   noindex = false,
 }: SEOProps) {
-  const siteUrl = import.meta.env.VITE_APP_URL || 'https://devtoolbox.app';
-  const fullUrl = `${siteUrl}${path}`;
+  const fullUrl = `${env.app.url}${path}`;
   const siteName = 'DevToolbox';
-  const gtmId = import.meta.env.VITE_GTM_ID || 'GTM-XXXXXXX';
-  const adsenseId = import.meta.env.VITE_ADSENSE_CLIENT_ID;
 
   return (
     <Helmet>
       {/* Google Tag Manager */}
-      <script>
-        {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','${gtmId}');`}
-      </script>
+      {env.analytics.enabled && (
+        <script>
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','${env.analytics.gtmId}');`}
+        </script>
+      )}
 
       {/* Google AdSense */}
-      <script 
-        async 
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
-        crossOrigin="anonymous"
-      />
+      {env.ads.enabled && (
+        <script 
+          async 
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${env.ads.clientId}`}
+          crossOrigin="anonymous"
+        />
+      )}
 
       {/* Basic Meta Tags */}
       <title>{title}</title>
@@ -52,14 +54,14 @@ export function SEO({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:site_name" content={siteName} />
-      <meta property="og:image" content={`${siteUrl}/og-image.png`} />
+      <meta property="og:image" content={`${env.app.url}/og-image.png`} />
 
       {/* Twitter Card Meta Tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:url" content={fullUrl} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />
+      <meta name="twitter:image" content={`${env.app.url}/og-image.png`} />
 
       {/* Additional Meta Tags */}
       <meta name="application-name" content={siteName} />
@@ -72,10 +74,18 @@ export function SEO({
       
       {/* Core Web Vitals & Performance Monitoring Meta Tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-      <link rel="preconnect" href="https://www.googletagmanager.com" />
-      <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-      <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
-      <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+      {env.analytics.enabled && (
+        <>
+          <link rel="preconnect" href="https://www.googletagmanager.com" />
+          <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        </>
+      )}
+      {env.ads.enabled && (
+        <>
+          <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+          <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        </>
+      )}
       
       {/* JSON-LD Schema */}
       <script type="application/ld+json">
@@ -83,7 +93,7 @@ export function SEO({
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
           name: siteName,
-          url: siteUrl,
+          url: env.app.url,
           description,
           applicationCategory: 'DeveloperApplication',
           operatingSystem: 'Any',

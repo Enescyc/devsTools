@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { Ads } from './Ads';
+import { env } from '@/config/env';
 
 interface AdLayoutProps {
   children: ReactNode;
@@ -10,6 +11,10 @@ export function AdLayout({ children }: AdLayoutProps) {
   const [adsenseLoaded, setAdsenseLoaded] = useState(false);
 
   useEffect(() => {
+    if (!env.ads.enabled) {
+      return;
+    }
+
     // Check if AdSense script is loaded
     const checkAdsenseLoaded = () => {
       if (window.adsbygoogle) {
@@ -46,12 +51,12 @@ export function AdLayout({ children }: AdLayoutProps) {
       </main>
 
       {/* Footer Ad */}
-      {!isAdBlockEnabled && (
+      {env.ads.enabled && !isAdBlockEnabled && (
         <footer className="mt-8 border-t">
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-[728px] mx-auto">
               <Ads
-                slot={import.meta.env.VITE_ADSENSE_SLOT_FOOTER}
+                slot={env.ads.slots.footer}
                 format="horizontal"
                 style={{ 
                   width: '728px',
@@ -74,7 +79,7 @@ export function AdLayout({ children }: AdLayoutProps) {
       )}
 
       {/* Ad Blocker Message */}
-      {isAdBlockEnabled && (
+      {env.ads.enabled && isAdBlockEnabled && (
         <footer className="mt-8 border-t">
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-[728px] mx-auto">

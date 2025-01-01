@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { env, isDevelopment } from '@/config/env';
 
 interface AdsProps {
   slot: string;
@@ -17,11 +18,10 @@ declare global {
 export function Ads({ slot, format = 'auto', style, className }: AdsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const clientId = import.meta.env.VITE_ADSENSE_CLIENT_ID;
 
   useEffect(() => {
     try {
-      if (!clientId || !slot || !containerRef.current) {
+      if (!env.ads.enabled || !slot || !containerRef.current) {
         return;
       }
 
@@ -40,9 +40,9 @@ export function Ads({ slot, format = 'auto', style, className }: AdsProps) {
         variant: 'destructive',
       });
     }
-  }, [clientId, slot, toast]);
+  }, [slot, toast]);
 
-  if (!clientId || !slot) {
+  if (!env.ads.enabled || !slot) {
     return null;
   }
 
@@ -55,11 +55,11 @@ export function Ads({ slot, format = 'auto', style, className }: AdsProps) {
           overflow: 'hidden',
           ...style,
         }}
-        data-ad-client={clientId}
+        data-ad-client={env.ads.clientId}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive="true"
-        data-adtest={import.meta.env.DEV ? 'on' : 'off'}
+        data-adtest={isDevelopment ? 'on' : 'off'}
       />
     </div>
   );

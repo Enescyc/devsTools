@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - VITE_APP_URL=https://devtoolbox.app
+      - VITE_API_URL=https://api.devtoolbox.app
+      # Analytics
+      - VITE_GTM_ID=${GTM_ID}
+      - VITE_GA_TRACKING_ID=${GA_TRACKING_ID}
+      - VITE_ENABLE_ANALYTICS=true
+      # AdSense
+      - VITE_ADSENSE_CLIENT_ID=${ADSENSE_CLIENT_ID}
+      - VITE_ADSENSE_SLOT_FOOTER=${ADSENSE_SLOT_FOOTER}
+      - VITE_ENABLE_ADS=true
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - CORS_ORIGIN=https://devtoolbox.app
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=100
+      - COMPRESSION_LEVEL=6
+      # Add any other backend-specific env vars here
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge 

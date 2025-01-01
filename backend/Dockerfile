@@ -9,11 +9,10 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci
 
-# Copy source code and tsconfig
-COPY tsconfig.json ./
-COPY src/ ./src/
+# Copy source code
+COPY . .
 
-# Build TypeScript code
+# Build the app
 RUN npm run build
 
 # Production stage
@@ -30,11 +29,8 @@ RUN npm ci --only=production
 # Copy built files from build stage
 COPY --from=build /app/dist ./dist
 
-# Copy environment file
-COPY .env.production ./.env
-
-# Expose port 3000
+# Expose port
 EXPOSE 3000
 
 # Start the server
-CMD ["npm", "start"] 
+CMD ["node", "dist/server.js"] 
