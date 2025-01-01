@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- UUID Generator API with v1, v4, v5 support
+- Text Case Converter with multiple case formats
+- String Escape/Unescape functionality
+- Timestamp Converter integration
 - Docker configuration for production and development environments
 - Nginx configuration for production frontend
 - Environment configuration management
@@ -29,33 +33,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized build process with multi-stage Docker builds
 - Updated TypeScript configuration for better type safety
 
-### Fixed
-- Testing environment configuration
-- Development hot-reload setup
-- Environment variable handling
-- Build process optimization
-
-## [0.2.0] - 2024-01-01
-
-### Added
-- Hash Generator with multiple algorithms (MD5, SHA-1, SHA-256, SHA-512)
-- UUID Generator with comprehensive features:
-  - Support for v1, v4, v5, and NIL UUIDs
-  - UUID validation and information
-  - Bulk generation and sequential UUIDs
-- Color Code Converter with HEX, RGB, and HSL support
-- String Escape/Unescape tool with multiple modes (HTML, JavaScript, URL, Base64)
-- Text Case Converter with support for camelCase, snake_case, PascalCase, and kebab-case
-- Regex Tester with group support and real-time matching
-- Text Diff Checker with line-by-line comparison
-- History panel component for tracking operations
-- Copy button component for easy clipboard access
-
-### Changed
-- Improved UI consistency across all tools
-- Enhanced error handling and user feedback
-- Updated component architecture for better maintainability
-- Optimized performance for large text processing
+### In Progress
+- JSON to CSV/XML/YAML Converter
+- Regex Tester with real-time matching
+- Hash Generator implementation
+- Performance optimizations for large inputs
 
 ### Fixed
 - Text formatter state updates for case conversions

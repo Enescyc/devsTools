@@ -5,30 +5,30 @@ A modern, fast, and feature-rich developer toolkit that consolidates essential d
 ## ✨ Features
 
 ### JSON Tools
-- 🔍 JSON Formatter & Validator
-- 📝 JSON Minifier
-- 🔄 JSON to CSV/XML/YAML Converter
-- 🎯 JSON Escape/Unescape
+- 🔍 JSON Formatter & Validator (Completed)
+- 📝 JSON Minifier (Completed)
+- 🔄 JSON to CSV/XML/YAML Converter (In Progress)
+- 🎯 JSON Escape/Unescape (Completed)
 
 ### Text Tools
-- ⚡ Text Case Converter (camelCase, snake_case, PascalCase, kebab-case)
-- 🔍 Regex Tester with Real-time Matching & Group Support
-- ↔️ Text Diff Checker with Line-by-Line Comparison
-- 🔠 String Escape/Unescape (HTML, JavaScript, URL, Base64)
+- ⚡ Text Case Converter (camelCase, snake_case, PascalCase, kebab-case) (Completed)
+- 🔍 Regex Tester with Real-time Matching & Group Support (In Progress)
+- ↔️ Text Diff Checker with Line-by-Line Comparison (Planned)
+- 🔠 String Escape/Unescape (HTML, JavaScript, URL, Base64) (Completed)
 
 ### Utility Tools
-- 🔐 Hash Generator (MD5, SHA-1, SHA-256, SHA-512)
-- 🎲 UUID Generator (v1, v4, v5, NIL) with Validation
-- 🎨 Color Code Converter (HEX, RGB, HSL)
-- ⏰ Timestamp Converter (integrated with UUID v1)
+- 🔐 Hash Generator (MD5, SHA-1, SHA-256, SHA-512) (In Progress)
+- 🎲 UUID Generator (v1, v4, v5, NIL) with Validation (Completed)
+- 🎨 Color Code Converter (HEX, RGB, HSL) (Planned)
+- ⏰ Timestamp Converter (integrated with UUID v1) (Completed)
 
 ### Common Features Across All Tools
-- 📋 Copy to Clipboard functionality
-- 📝 History tracking with restore capability
-- 🌓 Dark/Light theme support
-- ⚡ Real-time processing
-- 💾 Local storage for history entries
-- ⭐ Favorite entries support
+- 📋 Copy to Clipboard functionality (Completed)
+- 📝 History tracking with restore capability (Completed)
+- 🌓 Dark/Light theme support (Completed)
+- ⚡ Real-time processing (Completed)
+- 💾 Local storage for history entries (Completed)
+- ⭐ Favorite entries support (Completed)
 
 ## 🚀 Getting Started
 
